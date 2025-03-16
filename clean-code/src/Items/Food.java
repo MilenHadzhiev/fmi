@@ -1,5 +1,7 @@
 package Items;
 
+import org.json.JSONObject;
+
 public class Food extends ItemEntry {
     private final String foodName;
     private final String description;
@@ -9,6 +11,10 @@ public class Food extends ItemEntry {
     private final int carbsPerServing;
     private final int fatPerServing;
     private final int proteinPerServing;
+
+    public String getItemType() {
+        return "Food";
+    }
 
     public Food(FoodBuilder builder) {
         super(builder);
@@ -21,6 +27,21 @@ public class Food extends ItemEntry {
         this.fatPerServing = builder.fatPerServing;
         this.proteinPerServing = builder.proteinPerServing;
     }
+
+    @Override
+    public JSONObject toJSONObject() {
+        JSONObject json = super.toJSONObject();
+        json.put("foodName", foodName);
+        json.put("description", description);
+        json.put("servingSize", servingSize);
+        json.put("servingsPerContainer", servingsPerContainer);
+        json.put("caloriesPerServing", caloriesPerServing);
+        json.put("carbsPerServing", carbsPerServing);
+        json.put("fatPerServing", fatPerServing);
+        json.put("proteinPerServing", proteinPerServing);
+        return json;
+    }
+
     public static class FoodBuilder extends ItemBuilder<FoodBuilder> {
         private String foodName;
         private String description;
@@ -30,6 +51,10 @@ public class Food extends ItemEntry {
         private int carbsPerServing;
         private int fatPerServing;
         private int proteinPerServing;
+
+        protected FoodBuilder self() {
+            return (FoodBuilder) this;
+        }
 
         public FoodBuilder setFoodName(String foodName) {
             this.foodName = foodName;

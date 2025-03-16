@@ -2,15 +2,19 @@ package Items;
 
 import java.text.ParseException;
 import java.util.Date;
+
+import org.json.JSONObject;
 import utils.Utils;
 
-public class ItemEntry {
+abstract public class ItemEntry {
     protected final int amount;
     protected final Date date;
 
-    protected ItemEntry(int amount, Date date) {
-        this.amount = amount;
-        this.date = date;
+    abstract String getItemType();
+
+    public ItemEntry(ItemBuilder<?> builder) {
+        this.amount = builder.amount;
+        this.date = builder.date;
     }
 
     protected ItemEntry(int amount, String date) throws ParseException {
@@ -18,9 +22,16 @@ public class ItemEntry {
         this.date = Utils.parseStringToDate(date);
     }
 
-    public ItemEntry(ItemBuilder<?> builder) {
-        this.amount = builder.amount;
-        this.date = builder.date;
+    public JSONObject toJSONObject() {
+        JSONObject json = new JSONObject();
+        json.put("item_type", this.getItemType());
+        json.put("amount", this.amount);
+        json.put("date", this.date.toString());
+        return json;
+    }
+
+    public String toJsonString() {
+        return this.toJSONObject().toString();
     }
 
     @Override
@@ -28,13 +39,12 @@ public class ItemEntry {
         return this.amount + " on " + this.date;
     }
 
-    public static class ItemBuilder<T extends ItemBuilder<T>> {
+    public abstract static class ItemBuilder<T extends ItemBuilder<T>> {
         private int amount;
         private Date date;
 
-        protected T self() {
-            return (T) this;
-        }
+        protected abstract T self();
+
         public T setAmount(int amount) {
             this.amount = amount;
             return self();
@@ -50,8 +60,7 @@ public class ItemEntry {
             return self();
         }
 
-        public ItemEntry build() {
-            return new ItemEntry(this);
-        }
+        public abstract ItemEntry build();
     }
 }
+
