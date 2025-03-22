@@ -1,44 +1,61 @@
 #include <iostream>
+#include <climits>
 
-void bubble_sort(int* nums, int n);
-
-void print(int* nums, int n);
+void merge(int* arr1, size_t l, size_t mid, size_t h);
 
 int main() {
-    int n;
-    std::cin >> n;
-    int* nums = new int[n];
-    for (int i = 0; i < n; ++i)
+    size_t n1, n2, total;
+    std::cin >> n1;
+    std::cin >> n2;
+    total = n1 + n2;
+    int* nums = new int[total];
+    for (size_t i = 0; i < n1; ++i)
     {
         std::cin >> nums[i];
     }
-    bubble_sort(nums, n);
+    for (size_t i = 0; i < n2; ++i)
+    {
+        std::cin >> nums[i + n1];
+    }
+    merge(nums, 0,n1, total);
+    for (int i = 0; i < total; ++i)
+    {
+        std::cout << nums[i] << ' ';
+    }
     delete[] nums;
     return 0;
 }
 
-void bubble_sort(int* nums, int n)
+void merge(int* arr, size_t l, size_t mid, size_t h)
 {
-    for (int i = 0; i < n - 1; ++i)
+    size_t n1 = mid - l;
+    size_t n2 = h - mid;
+    int* L = new int[n1 + 1];
+    int* R = new int[n2 + 1];
+    for (size_t i = 0; i < n1; ++i)
     {
-        for (int j = 0; j < n - i - 1; ++j)
-        {
-            if (nums[j] > nums[j + 1])
-            {
-                int temp = nums[j];
-                nums[j] = nums[j + 1];
-                nums[j + 1] = temp;
-            }
-        }
-        print(nums, n);
+        L[i] = arr[i + l];
     }
-}
+    for (size_t i = 0; i < n2; ++i)
+    {
+        R[i] = arr[i + mid];
+    }
+    L[n1] = INT_MAX;
+    R[n2] = INT_MAX;
 
-void print(int* nums, int n)
-{
-    for (int i = 0; i < n; ++i)
+    size_t i = 0, j = 0;
+    for (size_t k = l; k < h; ++k)
     {
-        std::cout << nums[i] << " ";
+        if (L[i] <= R[j])
+        {
+            arr[k] = L[i++];
+        } else
+        {
+            arr[k] = R[j++];
+        }
     }
-    std::cout << "\n";
+
+
+    delete[] L;
+    delete[] R;
 }
