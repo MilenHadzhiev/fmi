@@ -3,25 +3,33 @@
 
 void merge(int* arr1, size_t l, size_t mid, size_t h);
 
+void mergesort(int* arr, int l, int h, int arr_size)
+{
+    if (l < h)
+    {
+        int mid = (l + h) / 2;
+        mergesort(arr, l, mid, arr_size);
+        mergesort(arr, mid + 1, h, arr_size);
+        merge(arr, l, mid, h);
+        for (int i = 0; i < arr_size; ++i)
+        {
+            std::cout << arr[i] << ' ';
+        }
+        std::cout << '\n';
+    } else
+    {
+
+    }
+}
 int main() {
-    size_t n1, n2, total;
+    size_t n1;
     std::cin >> n1;
-    std::cin >> n2;
-    total = n1 + n2;
-    int* nums = new int[total];
+    int* nums = new int[n1];
     for (size_t i = 0; i < n1; ++i)
     {
         std::cin >> nums[i];
     }
-    for (size_t i = 0; i < n2; ++i)
-    {
-        std::cin >> nums[i + n1];
-    }
-    merge(nums, 0,n1, total);
-    for (int i = 0; i < total; ++i)
-    {
-        std::cout << nums[i] << ' ';
-    }
+    mergesort(nums, 0, n1, n1);
     delete[] nums;
     return 0;
 }
