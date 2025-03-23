@@ -111,6 +111,17 @@ void merge(int* arr, size_t l, size_t mid, size_t h)
     delete[] R;
 }
 
+void mergesort(int* arr, int l, int h)
+{
+    if (l < h)
+    {
+        int mid = (l + h) / 2;
+        mergesort(arr, l, mid);
+        mergesort(arr, mid + 1, h);
+        merge(arr, l, mid, h);
+    }
+}
+
 
 void print(int* nums, int n)
 {
