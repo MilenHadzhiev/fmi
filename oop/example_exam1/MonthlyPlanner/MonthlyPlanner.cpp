@@ -11,6 +11,13 @@ void MonthlyPlanner::allocate_more_memory()
     m_available_space *= 2;
 }
 
+bool MonthlyPlanner::remove_less_important_task_if_exists(const PlannedTask& task)
+{
+    // if no overlapping task or overlapping task is less important remove it and return false;
+    // if overlapping task is more important return true;
+}
+
+
 bool MonthlyPlanner::is_valid_day(Month month, uint8_t day)
 {
     if ((month == Jan || month == Mar || month == May || month == July || month == Aug || month == Oct || month == Dec) && day > 31)
@@ -23,13 +30,6 @@ bool MonthlyPlanner::is_valid_day(Month month, uint8_t day)
     return true;
 }
 
-bool MonthlyPlanner::task_overlaps_with_more_important_one(const PlannedTask& task) const
-{
-    //
-    return false;
-}
-
-
 bool MonthlyPlanner::can_add_task(const PlannedTask& task, uint8_t day, uint8_t hour, uint8_t minutes) const
 {
     if (!is_valid_day(m_month, day)) return false;
@@ -38,7 +38,7 @@ bool MonthlyPlanner::can_add_task(const PlannedTask& task, uint8_t day, uint8_t 
     uint8_t available_time_in_the_day = (24 - hour) * 60 + (60 - minutes);
     if (task.get_duration() > available_time_in_the_day) return false;
 
-    return !task_overlaps_with_more_important_one(task);
+    return true;
 }
 
 MonthlyPlanner::MonthlyPlanner() : m_tasks_count(0), m_available_space(2), m_month(Jan)
@@ -114,6 +114,8 @@ MonthlyPlanner& MonthlyPlanner::operator=(MonthlyPlanner&& other) noexcept
 void MonthlyPlanner::add_task(const PlannedTask& task, uint8_t day, uint8_t start_hour, uint8_t start_minutes)
 {
     if (!can_add_task(task, day, start_hour, start_minutes)) throw std::invalid_argument("Task must be finishable within the day of start.");
+
+    if (remove_less_important_task_if_exists(task)) return;
 
     if (m_tasks_count + 1 >= m_available_space)
     {

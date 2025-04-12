@@ -13,7 +13,7 @@ class MonthlyPlanner {
     size_t m_available_space;
     Month m_month;
     bool can_add_task(const PlannedTask& task, uint8_t day, uint8_t hour, uint8_t minutes) const;
-    bool task_overlaps_with_more_important_one(const PlannedTask& task) const;
+    bool remove_less_important_task_if_exists(const PlannedTask& task);
     void allocate_more_memory();
 
 public:
