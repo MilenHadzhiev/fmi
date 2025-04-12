@@ -1,5 +1,15 @@
 #include "MonthlyPlanner.h"
 
+void MonthlyPlanner::allocate_more_memory()
+{
+    PlannedTask* buffer = new PlannedTask[m_available_space * 2];
+    for (size_t i = 0; i < m_tasks_count; ++i) buffer[i] = m_tasks[i];
+
+    delete[] m_tasks;
+    m_tasks = buffer;
+    m_available_space *= 2;
+}
+
 bool MonthlyPlanner::is_valid_day(Month month, uint8_t day)
 {
     if ((month == Jan || month == Mar || month == May || month == July || month == Aug || month == Oct || month == Dec) && day > 31)
@@ -11,6 +21,13 @@ bool MonthlyPlanner::is_valid_day(Month month, uint8_t day)
 
     return true;
 }
+
+bool MonthlyPlanner::task_overlaps_with_more_important_one(const PlannedTask& task) const
+{
+    //
+    return false;
+}
+
 
 bool MonthlyPlanner::can_add_task(const PlannedTask& task, uint8_t day, uint8_t hour, uint8_t minutes) const
 {
@@ -95,8 +112,27 @@ MonthlyPlanner& MonthlyPlanner::operator=(MonthlyPlanner&& other)
 
 void MonthlyPlanner::add_task(const PlannedTask& task, uint8_t day, uint8_t start_hour, uint8_t start_minutes)
 {
-    if (!can_add_task(task, day, start_hour, start_minutes)) throw std::invalid_argument("Task must be finished within the day on which they were started.");
+    if (!can_add_task(task, day, start_hour, start_minutes)) throw std::invalid_argument("Task must be finishable within the day of start.");
 
+    if (m_tasks_count + 1 >= m_available_space)
+    {
+        allocate_more_memory();
+    }
+    m_tasks[m_tasks_count++] = task;
+}
 
+void MonthlyPlanner::complete_task(uint8_t day, uint8_t hour)
+{
+    if (!is_valid_day(m_month, day) || hour >= 24) throw std::invalid_argument("Invalid day/hour");
+
+    for (size_t i = 0; i < m_tasks_count; ++i)
+    {
+        if (m_tasks[i].get_day() == day && m_tasks[i].get_start_hour() == hour)
+        {
+            m_tasks[i].complete();
+            return;
+        }
+    }
+    throw std::invalid_argument("No task scheduled");
 }
 

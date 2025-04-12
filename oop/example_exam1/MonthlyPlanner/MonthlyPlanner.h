@@ -14,6 +14,7 @@ class MonthlyPlanner {
     Month m_month;
     bool can_add_task(const PlannedTask& task, uint8_t day, uint8_t hour, uint8_t minutes) const;
     bool task_overlaps_with_more_important_one(const PlannedTask& task) const;
+    void allocate_more_memory();
 
 public:
     static bool is_valid_day(Month month, uint8_t day);
@@ -29,7 +30,7 @@ public:
 
     void add_task(const PlannedTask& task, uint8_t day, uint8_t start_hour, uint8_t start_minutes);
 
-    void complete_task(uint8_t hour, uint8_t minutes);
+    void complete_task(uint8_t day, uint8_t hour);
 
     void save_to_stream(std::ostream& os);
 };
