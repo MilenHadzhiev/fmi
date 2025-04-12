@@ -19,11 +19,32 @@ Task::Task(const char* description, uint8_t priority, float duration) : m_durati
     strcpy(m_description, description);
 }
 
-Task::Task(std::ifstream stream)
+Task::Task(std::ifstream& istream)
 {
-    if (stream.is_open() && stream.good())
+    if (istream.is_open() && istream.good())
     {
-        const short buffer = 1024;
+        const short buffer_size = 1024;
+        char buffer[buffer_size];
+
+        istream.getline(buffer, buffer_size, ',');
+        m_description = new char[strlen(buffer) + 1];
+        strcpy(m_description, buffer);
+        try
+        {
+            istream.getline(buffer, buffer_size, ',');
+            m_duration = std::stof(buffer);
+
+            istream.getline(buffer, buffer_size, ',');
+            m_priority = std::stoi(buffer);
+
+            istream.getline(buffer, buffer_size);
+            if (buffer[0] != '0' && buffer[0] != '1') throw std::invalid_argument("Value for is_completed must be within {0, 1}");
+            m_is_completed = buffer[0] == '1';
+        } catch (std::exception& e)
+        {
+            delete[] m_description;
+            throw e;
+        }
     }
     throw std::runtime_error("Stream is not open or is in invalid state");
 }
@@ -84,12 +105,12 @@ Task& Task::operator=(Task&& other) noexcept
 }
 
 
-std::ostream& Task::operator<<(std::ostream& os) const
+std::ostream& Task::operator<<(std::ostream& ostream) const
 {
-    if (os.good())
+    if (ostream.good())
     {
-        os << m_description << ',' << m_duration << ',' << m_priority << ',' << m_is_completed;
-        return os;
+        ostream << m_description << ',' << m_duration << ',' << m_priority << ',' << (m_is_completed ? 1 : 0);
+        return ostream;
     }
     throw std::runtime_error("Output stream is not in good state");
 }

@@ -18,13 +18,14 @@ public:
     PlannedTask& operator=(const PlannedTask& other);
     PlannedTask& operator=(PlannedTask&& other) noexcept;
 
-    inline const char* get_description() const;
-    inline uint8_t get_priority() const;
-    inline bool is_completed() const;
-    inline float get_duration() const;
-    inline uint8_t get_day() const;
-    inline uint8_t get_start_hour() const;
-    inline uint8_t get_start_minutes() const;
+    const char* get_description() const;
+    uint8_t get_priority() const;
+    bool is_completed() const;
+    float get_duration() const;
+    uint8_t get_day() const;
+    uint8_t get_start_hour() const;
+    uint8_t get_start_minutes() const;
+    const Task& get_task() const;
 
     void complete();
 };

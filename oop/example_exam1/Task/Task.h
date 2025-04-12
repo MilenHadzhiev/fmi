@@ -14,7 +14,7 @@ public:
 
     Task();
     Task(const char* description);
-    Task(std::ifstream stream);
+    Task(std::ifstream& istream);
     Task(const char* description, uint8_t priority, float duration);
     Task(const Task& other);
     Task(Task&& other) noexcept;
@@ -24,21 +24,21 @@ public:
     Task& operator=(const Task& other);
     Task& operator=(Task&& other) noexcept;
 
-    std::ostream& operator<<(std::ostream& os) const;
+    std::ostream& operator<<(std::ostream& ostream) const;
 
-    inline const char* get_description() const;
-    inline uint8_t get_priority() const;
-    inline bool is_completed() const;
-    inline float get_duration() const;
+    const char* get_description() const;
+    uint8_t get_priority() const;
+    bool is_completed() const;
+    float get_duration() const;
 
     bool operator>(const Task& other) const;
     bool operator>=(const Task& other) const;
     bool operator<=(const Task& other) const;
     bool operator<(const Task& other) const;
 
-    inline void complete();
-    inline void set_duration(float new_duration);
-    inline void set_priority(uint8_t new_priority);
+    void complete();
+    void set_duration(float new_duration);
+    void set_priority(uint8_t new_priority);
 };
 
 #endif //TASK_H

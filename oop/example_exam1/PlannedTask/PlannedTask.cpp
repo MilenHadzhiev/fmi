@@ -1,11 +1,13 @@
 #include "PlannedTask.h"
+#include "../Task/Task.h"
 
-PlannedTask::PlannedTask(const Task& task, uint8_t start_hour, uint8_t start_minutes) :
+PlannedTask::PlannedTask(const Task& task, uint8_t day, uint8_t start_hour, uint8_t start_minutes) :
     m_task(task),
+    m_day(day),
     m_start_hour(start_hour),
     m_start_minutes(start_minutes)
 {
-    if (m_start_hour >= 24 || start_minutes >= 60) throw std::invalid_argument("Hour must be within range 0-23 and minutes must be within range 0-59");
+    if (day > 31 || m_start_hour >= 24 || start_minutes >= 60) throw std::invalid_argument("Hour must be within range 0-23 and minutes must be within range 0-59");
 }
 
 PlannedTask::PlannedTask(const PlannedTask& other) = default;
@@ -38,7 +40,10 @@ PlannedTask& PlannedTask::operator=(PlannedTask&& other) noexcept
     return *this;
 }
 
-
+const Task& PlannedTask::get_task() const
+{
+    return m_task;
+}
 
 const char* PlannedTask::get_description() const
 {
@@ -47,7 +52,7 @@ const char* PlannedTask::get_description() const
 
 float PlannedTask::get_duration() const
 {
-    return m_task.get_priority();
+    return m_task.get_duration();
 }
 
 uint8_t PlannedTask::get_priority() const

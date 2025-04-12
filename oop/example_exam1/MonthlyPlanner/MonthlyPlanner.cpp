@@ -1,4 +1,5 @@
 #include "MonthlyPlanner.h"
+#include "../PlannedTask/PlannedTask.h"
 
 void MonthlyPlanner::allocate_more_memory()
 {
@@ -90,7 +91,7 @@ MonthlyPlanner& MonthlyPlanner::operator=(const MonthlyPlanner& other)
     return *this;
 }
 
-MonthlyPlanner& MonthlyPlanner::operator=(MonthlyPlanner&& other)
+MonthlyPlanner& MonthlyPlanner::operator=(MonthlyPlanner&& other) noexcept
 {
     if (this != &other)
     {
@@ -121,7 +122,7 @@ void MonthlyPlanner::add_task(const PlannedTask& task, uint8_t day, uint8_t star
     m_tasks[m_tasks_count++] = task;
 }
 
-void MonthlyPlanner::complete_task(uint8_t day, uint8_t hour)
+void MonthlyPlanner::complete_task(uint8_t day, uint8_t hour) const
 {
     if (!is_valid_day(m_month, day) || hour >= 24) throw std::invalid_argument("Invalid day/hour");
 
@@ -134,5 +135,20 @@ void MonthlyPlanner::complete_task(uint8_t day, uint8_t hour)
         }
     }
     throw std::invalid_argument("No task scheduled");
+}
+
+void MonthlyPlanner::read_from_stream(std::ifstream& istream)
+{
+
+}
+
+std::ostream& MonthlyPlanner::operator<<(std::ostream& ostream)
+{
+    for (size_t i = 0; i < m_tasks_count; ++i)
+    {
+        m_tasks[i].get_task().operator<<(ostream);
+        ostream << m_tasks[i].get_start_hour() << ',' << m_tasks[i].get_start_minutes() << '\n';
+    }
+    return ostream;
 }
 

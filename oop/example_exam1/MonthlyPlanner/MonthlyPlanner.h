@@ -22,17 +22,18 @@ public:
     MonthlyPlanner();
     MonthlyPlanner(const MonthlyPlanner& other);
     MonthlyPlanner(MonthlyPlanner&& other) noexcept;
-    MonthlyPlanner(std::istream& stream);
     ~MonthlyPlanner();
 
     MonthlyPlanner& operator=(const MonthlyPlanner& other);
-    MonthlyPlanner& operator=(MonthlyPlanner&& other);
+    MonthlyPlanner& operator=(MonthlyPlanner&& other) noexcept;
 
     void add_task(const PlannedTask& task, uint8_t day, uint8_t start_hour, uint8_t start_minutes);
 
-    void complete_task(uint8_t day, uint8_t hour);
+    void complete_task(uint8_t day, uint8_t hour) const;
 
-    void save_to_stream(std::ostream& os);
+    std::ostream& operator<<(std::ostream& ostream);
+
+    void read_from_stream(std::ifstream& istream);
 };
 
 #endif //MONTHLYPLANNER_H
