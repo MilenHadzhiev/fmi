@@ -85,7 +85,7 @@ MonthlyPlanner& MonthlyPlanner::operator=(const MonthlyPlanner& other)
         delete[] m_tasks;
         m_tasks = buffer;
         m_available_space = other.m_available_space;
-        m_tasks = other.m_tasks;
+        m_tasks_count = other.m_tasks_count;
         m_month = other.m_month;
     }
     return *this;
