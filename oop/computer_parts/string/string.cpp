@@ -29,8 +29,9 @@ String& String::operator=(const String& other)
 {
     if (this != &other)
     {
+        char* copy = copy_string(other.m_data);
         delete[] m_data;
-        m_data = copy_string(other.m_data);
+        m_data = copy;
         m_size = other.m_size;
     }
     return *this;
@@ -40,9 +41,10 @@ String& String::operator=(const char* other)
 {
     if (strcmp(m_data, other) != 0)
     {
+        char* copy = copy_string(other);
         delete[] m_data;
         m_size = strlen(other);
-        m_data = copy_string(other);
+        m_data = copy;
     }
     return *this;
 }

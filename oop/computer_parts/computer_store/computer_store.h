@@ -1,10 +1,12 @@
 #ifndef COMPUTER_STORE_H
 #define COMPUTER_STORE_H
+#include "../string/string.h"
+
 
 class ComputerStore
 {
-    const char* m_name;
-    const char* m_work_hours;
+    String m_name;
+    String m_work_hours;
     float m_income;
 };
 

@@ -71,6 +71,9 @@ ComputerPart& ComputerPart::operator=(ComputerPart&& other) noexcept
         m_price = other.m_price;
         m_warranty_years = other.m_warranty_years;
         m_part_type = other.m_part_type;
+        other.m_price = 0;
+        other.m_warranty_years = 0;
+        other.m_part_type = nothing;
 
         clean_moved_object(std::move(other));
     }

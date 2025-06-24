@@ -56,11 +56,15 @@ public:
     {
         if (this != &other)
         {
+            T* buffer = new T[other.m_available];
+            for (size_t i = 0; i < other.m_used; ++i)
+            {
+                buffer[i] = other.m_data[i];
+            }
             delete[] m_data;
+            m_data = buffer;
             m_available = other.m_available;
             m_used = other.m_used;
-            m_data = new T[m_available];
-            std::copy(m_data, other.m_data, m_used);
         }
         return *this;
     }
@@ -99,6 +103,16 @@ public:
 
     const T& operator[](unsigned long idx) const
     {
+        return this->at(idx);
+    }
+
+    T& operator[](unsigned long idx) const
+    {
+        return this->at(idx);
+    }
+
+    T& at(unsigned long idx) const
+    {
         if (!m_data) throw std::runtime_error("Can't index nullptr");
 
         if (idx >= m_used) throw std::invalid_argument("Index out of range");
@@ -117,7 +131,7 @@ public:
 
     const T& pop_back()
     {
-        if (!m_data) throw std::invalid_argument("Can't pop from nullptr");
+        if (!m_data || m_used <= 0) throw std::invalid_argument("Can't pop from empty container");
 
         return m_data[--m_used];
     }
